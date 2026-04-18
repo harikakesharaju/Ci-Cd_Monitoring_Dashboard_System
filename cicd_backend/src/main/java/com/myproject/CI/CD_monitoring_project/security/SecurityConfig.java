@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -29,30 +30,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(auth -> auth
+    	http.csrf(csrf -> csrf.disable())
+        .sessionManagement(session -> 
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/auth/users/**").hasRole("ADMIN")
+            // 🔥 ADD THIS LINE
+            .requestMatchers("/webhook/**").permitAll()
 
-                .requestMatchers("/projects/**")
-                    .hasAnyRole("ADMIN", "DEVELOPER", "OPS")
+            // existing rules
+            .requestMatchers("/auth/users/**").hasRole("ADMIN")
+            .requestMatchers("/auth/**").permitAll()
 
-                .requestMatchers("/builds/**", "/metrics/**")
-                    .hasAnyRole("ADMIN", "DEVELOPER", "VIEWER", "QA", "OPS")
+            .requestMatchers("/projects/**")
+                .hasAnyRole("ADMIN", "DEVELOPER", "OPS")
 
-                .requestMatchers("/deployments/**")
-                    .hasAnyRole("ADMIN", "OPS")
+            .requestMatchers("/builds/**", "/metrics/**")
+                .hasAnyRole("ADMIN", "DEVELOPER", "VIEWER", "QA", "OPS")
 
-                .requestMatchers("/tests/**")
-                    .hasAnyRole("QA", "ADMIN")
+            .requestMatchers("/deployments/**")
+                .hasAnyRole("ADMIN", "OPS")
 
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .requestMatchers("/tests/**")
+                .hasAnyRole("QA", "ADMIN")
+
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

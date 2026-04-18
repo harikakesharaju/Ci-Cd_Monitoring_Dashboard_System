@@ -13,9 +13,20 @@ import com.myproject.CI.CD_monitoring_project.entities.repositories.DeploymentRe
 
 @Service
 public class DeploymentService {
-    @Autowired private DeploymentRepository deploymentRepo;
+    @Autowired 
+    DeploymentRepository deploymentRepo;
+    
+    @Autowired
+    private ProjectService projectService;
 
     public Deployment createDeployment(Deployment deployment){
+
+        // ✅ ensure valid project
+        deployment.setProject(
+            projectService.getProjectEntity(
+                deployment.getProject().getId()
+            )
+        );
 
         deployment.setStatus(DeploymentStatus.PENDING);
         deployment.setStartTime(null);
@@ -38,10 +49,19 @@ public class DeploymentService {
         existing.setEndTime(updated.getEndTime());
         return deploymentRepo.save(existing);
     }
-    public void deleteDeployment(Long id) { 
-    	deploymentRepo.deleteById(id); }
+
+
+    public void deleteDeployment(Long id) {
+        if (!deploymentRepo.existsById(id)) {
+            throw new RuntimeException("Deployment not found");
+        }
+        deploymentRepo.deleteById(id);
+    }
     
-    public List<Deployment> getDeploymentsByProject(Long projectId) { return deploymentRepo.findByProjectId(projectId); }
+    
+    public List<Deployment> getDeploymentsByProject(Long projectId) { 
+    	return deploymentRepo.findByProjectId(projectId); 
+    }
     
     public void triggerDeployment(Long id) {
 
@@ -59,7 +79,7 @@ public class DeploymentService {
 
         deploymentRepo.save(deployment);
 
-        // simulate completion (later async)
+        // simulate completion
         deployment.setStatus(DeploymentStatus.SUCCESS);
         deployment.setEndTime(LocalDateTime.now());
 

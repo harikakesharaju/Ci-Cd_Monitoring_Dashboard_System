@@ -18,9 +18,6 @@ import com.myproject.CI.CD_monitoring_project.service.LogService;
 @RequestMapping("/logs")
 public class LogController {
     @Autowired private LogService logService;
-
-    @PostMapping public Log create(@RequestBody Log l) { 
-    	return logService.createLog(l); }
     
     @GetMapping public List<Log> getAll() { 
     	return logService.getAllLogs(); 
@@ -28,7 +25,9 @@ public class LogController {
     @GetMapping("/{id}") public Log get(@PathVariable Long id) { 
     	return logService.getLog(id); 
     }
-    @PutMapping("/{id}") public Log update(@PathVariable Long id, @RequestBody Log l) { 
-    	return logService.updateLog(id, l);    	
+    
+    @GetMapping("/build/{buildId}")
+    public List<Log> getLogsByBuild(@PathVariable Long buildId) {
+        return logService.getLogsByBuild(buildId);
     }
 }

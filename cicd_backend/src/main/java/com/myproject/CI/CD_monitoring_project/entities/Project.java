@@ -2,7 +2,10 @@ package com.myproject.CI.CD_monitoring_project.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,18 +14,34 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "projects")
-@Data
 public class Project {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String repositoryUrl;
+
     private String description;
 
-    public Long getId() {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_projects",
+        joinColumns = @JoinColumn(name = "project_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    private List<User> users;
+
+	public Long getId() {
 		return id;
 	}
 
@@ -61,12 +80,4 @@ public class Project {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
-
-	@ManyToMany
-    @JoinTable(
-        name = "user_projects",
-        joinColumns = @JoinColumn(name = "project_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
 }

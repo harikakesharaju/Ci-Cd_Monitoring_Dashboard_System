@@ -2,17 +2,20 @@ package com.myproject.CI.CD_monitoring_project.entities;
 
 import java.time.LocalDateTime;
 
+import com.myproject.CI.CD_monitoring_project.entities.enums.BuildStatus;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
 
 @Entity
 @Table(name = "builds")
-@Data
 public class Build {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,10 +23,50 @@ public class Build {
     @ManyToOne 
     private Project project;
     private String branch;
-    private String status; // SUCCESS, FAILURE
+    
+    @Enumerated(EnumType.STRING)
+    private BuildStatus status;
+    
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Long duration;
+    
+    private String buildNumber;   // Jenkins build id (#123)
+
+    private String triggeredBy;   // who triggered
+
+    @Column(length = 5000)
+    private String logs;
+
+    private String commitId;      // Git commit hash
+    
+	public String getBuildNumber() {
+		return buildNumber;
+	}
+	public void setBuildNumber(String buildNumber) {
+		this.buildNumber = buildNumber;
+	}
+	public String getTriggeredBy() {
+		return triggeredBy;
+	}
+	public void setTriggeredBy(String triggeredBy) {
+		this.triggeredBy = triggeredBy;
+	}
+	public String getLogs() {
+		return logs;
+	}
+	public void setLogs(String logs) {
+		this.logs = logs;
+	}
+	public String getCommitId() {
+		return commitId;
+	}
+	public void setCommitId(String commitId) {
+		this.commitId = commitId;
+	}
+	public void setStatus(BuildStatus status) {
+		this.status = status;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -42,11 +85,9 @@ public class Build {
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public String getStatus() {
+
+	public BuildStatus getStatus() {
 		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
 	}
 	public LocalDateTime getStartTime() {
 		return startTime;
