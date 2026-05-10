@@ -20,22 +20,31 @@ public class AuthService {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	public String login(AuthRequest req) {
-		User user = userRepo.findByUsername(req.getUsername())
-				.orElseThrow(() -> new RuntimeException("User not found"));
+	public String login(AuthRequest request) {
 
-		// Compare raw password with hashed password
-		if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-			throw new RuntimeException("Invalid credentials");
-		}
+	    User user = userRepo.findByUsername(request.getUsername())
+	            .orElseThrow(() -> new RuntimeException("User not found"));
 
-		// Generate JWT token
-		return jwtUtil.generateToken(user.getUsername(), user.getRole().toString());
+	    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+	        throw new RuntimeException("Invalid credentials");
+	    }
+
+	    return jwtUtil.generateToken(
+	            user.getUsername(),
+	            user.getRole().name()
+	    );
 	}
 
+
 	public User register(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userRepo.save(user);
+
+	    if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+	        throw new RuntimeException("Username already exists");
+	    }
+
+	    user.setPassword(passwordEncoder.encode(user.getPassword()));  // ✅ FIX
+
+	    return userRepo.save(user);
 	}
 
 	public List<User> getAllUsers() {

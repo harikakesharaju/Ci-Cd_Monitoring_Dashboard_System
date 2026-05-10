@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.CI.CD_monitoring_project.dto.BuildResponse;
 import com.myproject.CI.CD_monitoring_project.dto.BuildWebhookDTO;
+import com.myproject.CI.CD_monitoring_project.dto.DashboardResponse;
 import com.myproject.CI.CD_monitoring_project.entities.Build;
 import com.myproject.CI.CD_monitoring_project.entities.enums.BuildStatus;
 import com.myproject.CI.CD_monitoring_project.entities.repositories.BuildRepository;
@@ -127,19 +128,37 @@ public class BuildService {
 	}
 	
 	public double getSuccessRateLast7Days(Long projectId) {
-
 	    LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-
 	    List<Build> builds =
 	        buildRepo.findByProjectIdAndStartTimeAfter(projectId, sevenDaysAgo);
-
 	    long total = builds.size();
-
 	    long success = builds.stream()
 	            .filter(b -> b.getStatus() == BuildStatus.SUCCESS)
 	            .count();
-
 	    return total == 0 ? 0 : (success * 100.0) / total;
+	}
+	
+	public DashboardResponse getDashboard(Long projectId) {
+
+	    String projectName = projectService
+	            .getProjectEntity(projectId)
+	            .getName();
+
+	    double successRate = getSuccessRateLast7Days(projectId);
+	    double failureRate = getFailureRateLastHour(projectId);
+
+	    List<BuildResponse> builds =
+	            getBuildsByProject(projectId)
+	            .stream()
+	            .limit(5) // latest 5 builds
+	            .toList();
+
+	    return new DashboardResponse(
+	            projectName,
+	            successRate,
+	            failureRate,
+	            builds
+	    );
 	}
 	
 }

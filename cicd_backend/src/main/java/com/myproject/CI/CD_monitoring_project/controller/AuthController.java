@@ -1,7 +1,6 @@
 package com.myproject.CI.CD_monitoring_project.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.CI.CD_monitoring_project.dto.AuthRequest;
 import com.myproject.CI.CD_monitoring_project.dto.AuthResponse;
+import com.myproject.CI.CD_monitoring_project.dto.RegisterRequest;
 import com.myproject.CI.CD_monitoring_project.dto.UserResponse;
 import com.myproject.CI.CD_monitoring_project.entities.User;
+import com.myproject.CI.CD_monitoring_project.entities.enums.Role;
 import com.myproject.CI.CD_monitoring_project.service.AuthService;
 
 @RestController
@@ -40,9 +41,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody User user) {
+    public UserResponse register(@RequestBody RegisterRequest request) {
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setRole(Role.valueOf(request.getRole()));
+
         User saved = authService.register(user);
-        return new UserResponse(saved.getId(), saved.getUsername(), saved.getRole().name());
+
+        return new UserResponse(
+            saved.getId(),
+            saved.getUsername(),
+            saved.getRole().name()
+        );
     }
     
     @GetMapping("/users")
