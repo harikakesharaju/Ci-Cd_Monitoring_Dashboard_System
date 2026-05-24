@@ -28,8 +28,18 @@ public class BuildWebhookDTO {
     @Min(value = 0, message = "Duration must be non-negative")
     private long duration;
 
-    @NotBlank(message = "Logs are required")
+    public String getCommitId() {
+		return commitId;
+	}
+
+	public void setCommitId(String commitId) {
+		this.commitId = commitId;
+	}
+
+	@NotBlank(message = "Logs are required")
     private String logs;
+    
+    private String commitId;
 
     // Constructors
     public BuildWebhookDTO() {}

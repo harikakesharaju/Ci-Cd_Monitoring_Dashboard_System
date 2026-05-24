@@ -148,7 +148,7 @@ public class BuildService {
 
             build.setDuration(dto.getDuration());
             build.setLogs(dto.getLogs());
-
+            build.setCommitId(dto.getCommitId()); 
             build.setStartTime(LocalDateTime.now());
 
             build.setEndTime(

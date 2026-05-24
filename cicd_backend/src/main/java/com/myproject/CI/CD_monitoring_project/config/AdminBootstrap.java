@@ -28,17 +28,22 @@ public class AdminBootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0) {
-            return;
-        }
+
         if (bootstrapUsername == null || bootstrapUsername.isBlank()
                 || bootstrapPassword == null || bootstrapPassword.isBlank()) {
             return;
         }
+
+        // only skip if admin already exists
+        if (userRepository.findByUsername(bootstrapUsername.trim()).isPresent()) {
+            return;
+        }
+
         User admin = new User();
         admin.setUsername(bootstrapUsername.trim());
         admin.setPassword(bootstrapPassword);
         admin.setRole(Role.ADMIN);
+
         userService.createUser(admin);
     }
 }

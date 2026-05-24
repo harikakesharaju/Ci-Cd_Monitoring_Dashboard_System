@@ -32,13 +32,13 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/webhook/**").permitAll()
-                        .requestMatchers("/auth/register").hasRole("ADMIN")
-                        .requestMatchers("/auth/users/**").hasRole("ADMIN")
-                        .requestMatchers("/auth/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/deployments/**")
+                        .requestMatchers("/api/auth/login", "/api/webhook/**").permitAll()
+                        .requestMatchers("/api/auth/register").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/users/**").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/deployments/**")
                             .hasAnyRole("ADMIN", "OPS", "DEVELOPER", "VIEWER", "QA")
-                        .requestMatchers("/deployments/**").hasAnyRole("ADMIN", "OPS")
+                        .requestMatchers("/api/deployments/**").hasAnyRole("ADMIN", "OPS")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
