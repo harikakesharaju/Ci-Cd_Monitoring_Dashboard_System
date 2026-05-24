@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             	    String username = jwtUtil.extractUsername(token);
             	    String role = jwtUtil.extractRole(token);
-            	    System.out.println("Authenticated user: " + username);
-            	    
+
             	    List<SimpleGrantedAuthority> authorities =
             	            List.of(new SimpleGrantedAuthority(role));
 

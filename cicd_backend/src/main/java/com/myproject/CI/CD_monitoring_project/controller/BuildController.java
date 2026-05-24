@@ -2,7 +2,6 @@ package com.myproject.CI.CD_monitoring_project.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +16,21 @@ import com.myproject.CI.CD_monitoring_project.dto.BuildResponse;
 import com.myproject.CI.CD_monitoring_project.entities.Build;
 import com.myproject.CI.CD_monitoring_project.service.BuildService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/builds")
+@RequestMapping("/api/builds")
 public class BuildController {
 
-    @Autowired
-    private BuildService buildService;
+    private final BuildService buildService;
+
+    public BuildController(BuildService buildService) {
+        this.buildService = buildService;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public BuildResponse create(@RequestBody Build b){
+    public BuildResponse create(@Valid @RequestBody Build b) {
         return buildService.createBuild(b);
     }
 
@@ -42,16 +46,19 @@ public class BuildController {
         return buildService.getBuild(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public BuildResponse update(@PathVariable Long id, @RequestBody Build b) {
+    public BuildResponse update(@PathVariable Long id, @Valid @RequestBody Build b) {
         return buildService.updateBuild(id, b);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         buildService.deleteBuild(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','DEVELOPER','VIEWER','QA','OPS')")
     @GetMapping("/project/{projectId}")
     public List<BuildResponse> getByProject(@PathVariable Long projectId) {
         return buildService.getBuildsByProject(projectId);

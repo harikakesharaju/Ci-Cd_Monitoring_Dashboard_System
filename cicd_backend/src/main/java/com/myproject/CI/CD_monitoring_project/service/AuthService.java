@@ -1,7 +1,5 @@
 package com.myproject.CI.CD_monitoring_project.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,26 +34,4 @@ public class AuthService {
 	}
 
 
-	public User register(User user) {
-
-	    if (userRepo.findByUsername(user.getUsername()).isPresent()) {
-	        throw new RuntimeException("Username already exists");
-	    }
-
-	    user.setPassword(passwordEncoder.encode(user.getPassword()));  // ✅ FIX
-
-	    return userRepo.save(user);
-	}
-
-	public List<User> getAllUsers() {
-		return userRepo.findAll();
-	}
-
-	public User getUser(Long id) {
-		return userRepo.findById(id).orElseThrow();
-	}
-
-	public void deleteUser(Long id) {
-		userRepo.deleteById(id);
-	}
 }

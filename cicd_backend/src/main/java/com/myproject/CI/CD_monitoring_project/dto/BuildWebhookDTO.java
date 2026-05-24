@@ -1,17 +1,50 @@
 package com.myproject.CI.CD_monitoring_project.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+
+import com.myproject.CI.CD_monitoring_project.dto.validation.ValidBuildStatus;
+
+/**
+ * DTO for receiving webhook notifications from Jenkins/GitHub.
+ * Validates incoming build data.
+ */
 public class BuildWebhookDTO {
 
-    private Long projectId;   // ✅ IMPORTANT
+    @NotNull(message = "Project ID is required")
+    private Long projectId;
 
+    @NotBlank(message = "Build number is required")
     private String buildNumber;
+
+    @NotBlank(message = "Status is required")
+    @ValidBuildStatus
     private String status;
+
+    @NotBlank(message = "Branch is required")
     private String branch;
+
+    @Min(value = 0, message = "Duration must be non-negative")
     private long duration;
+
+    @NotBlank(message = "Logs are required")
     private String logs;
 
-    // getters & setters
+    // Constructors
+    public BuildWebhookDTO() {}
 
+    public BuildWebhookDTO(Long projectId, String buildNumber, String status, 
+                          String branch, long duration, String logs) {
+        this.projectId = projectId;
+        this.buildNumber = buildNumber;
+        this.status = status;
+        this.branch = branch;
+        this.duration = duration;
+        this.logs = logs;
+    }
+
+    // Getters & Setters
     public Long getProjectId() {
         return projectId;
     }

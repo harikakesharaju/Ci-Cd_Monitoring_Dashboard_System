@@ -1,8 +1,18 @@
 package com.myproject.CI.CD_monitoring_project.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class RegisterRequest {
+    @NotBlank
+    @Size(min = 2, max = 128)
     private String username;
+
+    @NotBlank
+    @Size(min = 8, max = 128)
     private String password;
+
+    @NotBlank
     private String role;
 	public String getUsername() {
 		return username;
