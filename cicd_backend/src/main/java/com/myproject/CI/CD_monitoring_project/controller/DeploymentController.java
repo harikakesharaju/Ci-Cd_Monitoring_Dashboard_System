@@ -64,4 +64,13 @@ public class DeploymentController {
         deploymentService.triggerDeployment(id);
         return "Deployment triggered for id: " + id;
     }
+    
+    @PostMapping("/project/{projectId}/complete")
+    public String markComplete(
+            @PathVariable Long projectId
+    ) {
+        deploymentService.markLatestDeploymentSuccess(projectId);
+
+        return "Latest deployment updated";
+    }
 }

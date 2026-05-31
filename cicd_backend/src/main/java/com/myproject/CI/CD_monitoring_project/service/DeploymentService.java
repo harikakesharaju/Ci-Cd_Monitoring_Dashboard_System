@@ -245,4 +245,33 @@ public class DeploymentService {
 
         deploymentRepo.save(deployment);
     }
+    
+    public void markLatestDeploymentSuccess(Long projectId) {
+
+        Deployment deployment =
+                deploymentRepo
+                        .findTopByProjectIdAndStatusOrderByIdDesc(
+                                projectId,
+                                DeploymentStatus.PENDING
+                        )
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "No pending deployment found"
+                                )
+                        );
+
+        deployment.setStatus(DeploymentStatus.SUCCESS);
+
+        if (deployment.getStartTime() == null) {
+            deployment.setStartTime(LocalDateTime.now());
+        }
+
+        deployment.setEndTime(LocalDateTime.now());
+
+        deployment.setLogs(
+                "Deployment completed successfully"
+        );
+
+        deploymentRepo.save(deployment);
+    }
 }
