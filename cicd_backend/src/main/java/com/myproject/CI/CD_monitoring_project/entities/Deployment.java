@@ -61,6 +61,8 @@ public class Deployment {
 
     private String version;
     
+    private String deploymentUrl;
+    
 	public Long getId() {
 		return id;
 	}
@@ -97,6 +99,12 @@ public class Deployment {
 	}
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+	}
+	public String getDeploymentUrl() {
+		return deploymentUrl;
+	}
+	public void setDeploymentUrl(String deploymentUrl) {
+		this.deploymentUrl = deploymentUrl;
 	}
 
     // getters & setters

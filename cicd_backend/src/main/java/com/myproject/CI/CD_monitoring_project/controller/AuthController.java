@@ -24,6 +24,8 @@ import com.myproject.CI.CD_monitoring_project.service.AuthService;
 import com.myproject.CI.CD_monitoring_project.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -92,6 +94,18 @@ public class AuthController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/debug/current-user")
+    public ResponseEntity<?> getCurrentUserInfo() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(java.util.Map.of(
+            "username", auth.getName(),
+            "authorities", auth.getAuthorities().stream()
+                    .map(a -> a.getAuthority())
+                    .toList(),
+            "isAuthenticated", auth.isAuthenticated()
+        ));
+    }
+
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

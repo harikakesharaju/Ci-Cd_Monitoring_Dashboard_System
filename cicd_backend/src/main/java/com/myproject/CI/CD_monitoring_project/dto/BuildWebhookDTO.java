@@ -40,6 +40,8 @@ public class BuildWebhookDTO {
     private String logs;
     
     private String commitId;
+    
+    private String triggeredBy;  // e.g., "webhook", "manual", "api"
 
     // Constructors
     public BuildWebhookDTO() {}
@@ -101,5 +103,13 @@ public class BuildWebhookDTO {
 
     public void setLogs(String logs) {
         this.logs = logs;
+    }
+
+    public String getTriggeredBy() {
+        return triggeredBy;
+    }
+
+    public void setTriggeredBy(String triggeredBy) {
+        this.triggeredBy = triggeredBy;
     }
 }

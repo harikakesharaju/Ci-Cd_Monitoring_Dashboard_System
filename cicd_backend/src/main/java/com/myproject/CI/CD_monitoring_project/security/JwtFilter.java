@@ -19,6 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired private JwtUtil jwtUtil;
 
+    private static final org.slf4j.Logger logger = 
+        org.slf4j.LoggerFactory.getLogger(JwtFilter.class);
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -32,13 +35,20 @@ public class JwtFilter extends OncePerRequestFilter {
             	    String username = jwtUtil.extractUsername(token);
             	    String role = jwtUtil.extractRole(token);
 
-            	    List<SimpleGrantedAuthority> authorities =
-            	            List.of(new SimpleGrantedAuthority(role));
+            	    logger.debug("JWT validated - Username: {}, Role: {}", username, role);
 
-            	    UsernamePasswordAuthenticationToken auth =
-            	            new UsernamePasswordAuthenticationToken(username, null, authorities);
+            	    if (role != null && !role.isEmpty()) {
+            	        List<SimpleGrantedAuthority> authorities =
+            	                List.of(new SimpleGrantedAuthority(role));
 
-            	    SecurityContextHolder.getContext().setAuthentication(auth);
+            	        UsernamePasswordAuthenticationToken auth =
+            	                new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+            	        SecurityContextHolder.getContext().setAuthentication(auth);
+            	        logger.debug("Authentication set with authorities: {}", authorities);
+            	    } else {
+            	        logger.warn("Role is null or empty for user: {}", username);
+            	    }
             	}
         }
         chain.doFilter(request, response);

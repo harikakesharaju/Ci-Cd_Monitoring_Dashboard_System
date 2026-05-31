@@ -28,7 +28,7 @@ public class BuildController {
         this.buildService = buildService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DEVELOPER','OPS')")
     @PostMapping
     public BuildResponse create(@Valid @RequestBody Build b) {
         return buildService.createBuild(b);
@@ -46,13 +46,13 @@ public class BuildController {
         return buildService.getBuild(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DEVELOPER','OPS')")
     @PutMapping("/{id}")
     public BuildResponse update(@PathVariable Long id, @Valid @RequestBody Build b) {
         return buildService.updateBuild(id, b);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DEVELOPER','OPS')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         buildService.deleteBuild(id);

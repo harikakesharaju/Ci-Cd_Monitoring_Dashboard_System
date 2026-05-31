@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myproject.CI.CD_monitoring_project.dto.CreateDeploymentRequest;
 import com.myproject.CI.CD_monitoring_project.entities.Deployment;
 import com.myproject.CI.CD_monitoring_project.service.DeploymentService;
 
@@ -29,8 +30,8 @@ public class DeploymentController {
 
     @PreAuthorize("hasAnyRole('ADMIN','OPS')")
     @PostMapping    
-    public Deployment create(@Valid @RequestBody Deployment d) { 
-    	return deploymentService.createDeployment(d); }
+    public Deployment create(@Valid @RequestBody CreateDeploymentRequest request) { 
+    	return deploymentService.createDeployment(request); }
     
     @PreAuthorize("hasAnyRole('ADMIN','OPS','DEVELOPER','VIEWER')")
     @GetMapping    
@@ -47,7 +48,7 @@ public class DeploymentController {
     public Deployment update(@PathVariable Long id, @Valid @RequestBody Deployment d) { 
     	return deploymentService.updateDeployment(id, d); }
     
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','OPS')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) { 
     	deploymentService.deleteDeployment(id); }

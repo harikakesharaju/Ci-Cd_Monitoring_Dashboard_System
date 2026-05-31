@@ -1,0 +1,746 @@
+{
+  "info": {
+    "name": "CI/CD Monitoring Dashboard API",
+    "description": "Complete API testing collection for CI/CD Monitoring Dashboard System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login and get JWT token. Save token in {{auth_token}} variable"
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/users",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "users"]
+            },
+            "description": "Get list of all users (requires ADMIN role)"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "users", "1"]
+            },
+            "description": "Get specific user details by ID"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"newemail@example.com\",\n  \"firstName\": \"Updated\",\n  \"lastName\": \"User\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "users", "1"]
+            },
+            "description": "Update user information"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "users", "1"]
+            },
+            "description": "Delete a user (requires ADMIN role)"
+          }
+        },
+        {
+          "name": "Run Tests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/run-tests",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "run-tests"]
+            },
+            "description": "Trigger test execution"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Test Project\",\n  \"description\": \"Test project for CI/CD pipeline\",\n  \"repositoryUrl\": \"https://github.com/user/repo\",\n  \"jenkinsJobName\": \"my-test-job\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects",
+              "host": ["{{base_url}}"],
+              "path": ["projects"]
+            },
+            "description": "Create a new project"
+          }
+        },
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/projects",
+              "host": ["{{base_url}}"],
+              "path": ["projects"]
+            },
+            "description": "Get list of all projects"
+          }
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/projects/1",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "1"]
+            },
+            "description": "Get specific project details"
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Project Name\",\n  \"description\": \"Updated description\",\n  \"repositoryUrl\": \"https://github.com/user/repo-updated\",\n  \"jenkinsJobName\": \"updated-job-name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects/1",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "1"]
+            },
+            "description": "Update project information"
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/projects/1",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "1"]
+            },
+            "description": "Delete a project"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Builds",
+      "item": [
+        {
+          "name": "Create Build",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": 1,\n  \"buildNumber\": \"1\",\n  \"status\": \"SUCCESS\",\n  \"duration\": 300,\n  \"commitHash\": \"abc123def456\",\n  \"branch\": \"main\",\n  \"buildUrl\": \"https://jenkins.example.com/job/my-project/1\",\n  \"triggeredBy\": \"api\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/builds",
+              "host": ["{{base_url}}"],
+              "path": ["builds"]
+            },
+            "description": "Create a new build record"
+          }
+        },
+        {
+          "name": "Get All Builds",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/builds",
+              "host": ["{{base_url}}"],
+              "path": ["builds"]
+            },
+            "description": "Get list of all builds"
+          }
+        },
+        {
+          "name": "Get Build by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/builds/1",
+              "host": ["{{base_url}}"],
+              "path": ["builds", "1"]
+            },
+            "description": "Get specific build details"
+          }
+        },
+        {
+          "name": "Get Builds by Project",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/builds/project/1",
+              "host": ["{{base_url}}"],
+              "path": ["builds", "project", "1"]
+            },
+            "description": "Get all builds for a specific project"
+          }
+        },
+        {
+          "name": "Update Build",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"FAILED\",\n  \"duration\": 350\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/builds/1",
+              "host": ["{{base_url}}"],
+              "path": ["builds", "1"]
+            },
+            "description": "Update build status and details"
+          }
+        },
+        {
+          "name": "Delete Build",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/builds/1",
+              "host": ["{{base_url}}"],
+              "path": ["builds", "1"]
+            },
+            "description": "Delete a build record"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deployments",
+      "item": [
+        {
+          "name": "Create Deployment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buildId\": 1,\n  \"projectId\": 1,\n  \"environment\": \"STAGING\",\n  \"status\": \"IN_PROGRESS\",\n  \"deploymentUrl\": \"https://staging.example.com\",\n  \"deployedBy\": \"testuser\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/deployments",
+              "host": ["{{base_url}}"],
+              "path": ["deployments"]
+            },
+            "description": "Create a new deployment"
+          }
+        },
+        {
+          "name": "Get All Deployments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/deployments",
+              "host": ["{{base_url}}"],
+              "path": ["deployments"]
+            },
+            "description": "Get list of all deployments"
+          }
+        },
+        {
+          "name": "Get Deployment by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/deployments/1",
+              "host": ["{{base_url}}"],
+              "path": ["deployments", "1"]
+            },
+            "description": "Get specific deployment details"
+          }
+        },
+        {
+          "name": "Update Deployment Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SUCCESS\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/deployments/1",
+              "host": ["{{base_url}}"],
+              "path": ["deployments", "1"]
+            },
+            "description": "Update deployment status"
+          }
+        },
+        {
+          "name": "Delete Deployment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/deployments/1",
+              "host": ["{{base_url}}"],
+              "path": ["deployments", "1"]
+            },
+            "description": "Delete a deployment record"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "Get All Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs?page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get paginated list of logs"
+          }
+        },
+        {
+          "name": "Get Log by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "1"]
+            },
+            "description": "Get specific log details"
+          }
+        },
+        {
+          "name": "Get Logs by Build ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs/build/1",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "build", "1"]
+            },
+            "description": "Get all logs for a specific build"
+          }
+        },
+        {
+          "name": "Update Log",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"logContent\": \"Updated log content\",\n  \"level\": \"ERROR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "1"]
+            },
+            "description": "Update log entry"
+          }
+        },
+        {
+          "name": "Delete Log",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["logs", "1"]
+            },
+            "description": "Delete a log entry"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Get Failure Rate",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/metrics/failure-rate/1",
+              "host": ["{{base_url}}"],
+              "path": ["metrics", "failure-rate", "1"]
+            },
+            "description": "Get build failure rate for a project"
+          }
+        },
+        {
+          "name": "Get Success Rate",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/metrics/success-rate/1",
+              "host": ["{{base_url}}"],
+              "path": ["metrics", "success-rate", "1"]
+            },
+            "description": "Get build success rate for a project"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard"]
+            },
+            "description": "Get dashboard overview with all key metrics"
+          }
+        },
+        {
+          "name": "Get Dashboard for Project",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard/project/1",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "project", "1"]
+            },
+            "description": "Get dashboard data for specific project"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "GitHub Webhook Payload (Test)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-GitHub-Event",
+                "value": "push"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": 1,\n  \"buildNumber\": \"123\",\n  \"status\": \"SUCCESS\",\n  \"duration\": 300,\n  \"branch\": \"main\",\n  \"commitId\": \"abc123def456789\",\n  \"logs\": \"Build completed successfully\",\n  \"triggeredBy\": \"webhook\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhook/github",
+              "host": ["{{base_url}}"],
+              "path": ["webhook", "github"]
+            },
+            "description": "Test GitHub webhook integration (should trigger Jenkins build)"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
